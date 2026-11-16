@@ -1,0 +1,12 @@
+{
+  "name": "podyard-tap",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "tsx scripts/generate-brew-formula.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}
