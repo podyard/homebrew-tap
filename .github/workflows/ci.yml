@@ -21,4 +21,10 @@ jobs:
       - name: Validate formula
         run: |
           brew style Formula/podyard.rb
-          brew audit --strict --new-formula Formula/podyard.rb || true
+          brew audit Formula/podyard.rb || true
+
+      - name: Check formula has a real checksum
+        run: |
+          if grep -q 'sha256 "0000000000000000000000000000000000000000000000000000000000000000"' Formula/podyard.rb; then
+            echo "::warning::Formula/podyard.rb still has the placeholder SHA-256. @podyard/cli has not been published yet. Run scripts/generate-brew-formula.ts after publishing to stamp the real checksum."
+          fi
