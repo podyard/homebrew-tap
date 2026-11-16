@@ -12,11 +12,9 @@ class Podyard < Formula
 
   def install
     # Dir.pwd is the unpacked `package/` directory of the npm tarball (read-only).
-    # Copy it to libexec so npm can install its runtime deps there.
-    # npm install <local-dir> installs the package as a dependency into
-    # node_modules/@podyard/cli/, so point the binary at that path.
-    system "cp", "-R", Dir.pwd, libexec
-    system "npm", "--prefix", libexec, "install", Dir.pwd.to_s, "--omit=dev", "--no-audit", "--no-fund"
+    # Install the package from the original tarball (not the local dir, which
+    # creates a symlink) so the files are copied into libexec/node_modules.
+    system "npm", "--prefix", libexec, "install", url, "--omit=dev", "--no-audit", "--no-fund"
     (bin / "podyard").install libexec / "node_modules" / "@podyard" / "cli" / "dist" / "index.js"
   end
 
