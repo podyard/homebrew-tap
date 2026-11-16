@@ -5,8 +5,8 @@ class Podyard < Formula
   homepage "https://podyard.dev"
   url "https://registry.npmjs.org/@podyard/cli/-/cli-0.1.0.tgz"
   version "0.1.0"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
-  license "MIT"
+  sha256 "cda3186b3e39c67366a8cfd3ab448fa43581d8d5817a8fcd0408e5aac0c922fb"
+  license "Apache-2.0"
 
   depends_on "node"
 

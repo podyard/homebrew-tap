@@ -34,7 +34,7 @@ const PKG_NAME = "@podyard/cli";
 const BREW_NAME = "podyard";
 const DESCRIPTION = "Millisecond sandboxes for AI agents (CLI)";
 const HOMEPAGE = "https://podyard.dev";
-const LICENSE = "MIT";
+const LICENSE = "Apache-2.0";
 
 interface NpmVersion {
   dist: { shasum: string; tarball: string };
@@ -44,12 +44,19 @@ interface NpmVersion {
 
 const NPM_REGISTRY = "https://registry.npmjs.org";
 
-/** Ask the npm registry for the tarball + metadata for a package version. */
+/**
+ * Ask the npm registry for the tarball + metadata for a package version.
+ *
+ * Always fetches the full package document (no version segment in the URL).
+ * Appending a version to the registry URL returns only that single version's
+ * metadata — which lacks the `dist-tags` / `versions` maps — so "latest"
+ * could not be resolved. Fetching the bare doc gives us both.
+ */
 async function fetchNpmVersion(
   pkg: string,
   version: string
 ): Promise<NpmVersion> {
-  const url = `${NPM_REGISTRY}/${encodeURIComponent(pkg).replace("%40", "@")}/${version}`;
+  const url = `${NPM_REGISTRY}/${encodeURIComponent(pkg).replace("%40", "@")}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`npm registry returned ${res.status} for ${url}`);
