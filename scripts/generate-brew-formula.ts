@@ -84,7 +84,9 @@ async function fetchNpmVersion(
 async function computeSha256(tarballUrl: string): Promise<string> {
   const res = await fetch(tarballUrl);
   if (!res.ok) {
-    throw new Error(`Failed to download tarball ${res.status} for ${tarballUrl}`);
+    throw new Error(
+      `Failed to download tarball ${res.status} for ${tarballUrl}`
+    );
   }
   const buf = Buffer.from(await res.arrayBuffer());
   return createHash("sha256").update(buf).digest("hex");

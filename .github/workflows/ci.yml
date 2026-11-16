@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
 
 permissions:
@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   validate-formula:
+    name: Validate formula
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,13 +19,38 @@ jobs:
       - name: Setup Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Validate formula
-        run: |
-          brew style Formula/podyard.rb
-          brew audit Formula/podyard.rb || true
+      - name: Validate formula style
+        run: brew style Formula/podyard.rb
+
+      - name: Audit formula
+        run: brew audit --strict Formula/podyard.rb || true
 
       - name: Check formula has a real checksum
         run: |
           if grep -q 'sha256 "0000000000000000000000000000000000000000000000000000000000000000"' Formula/podyard.rb; then
             echo "::warning::Formula/podyard.rb still has the placeholder SHA-256. @podyard/cli has not been published yet. Run scripts/generate-brew-formula.ts after publishing to stamp the real checksum."
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install tooling
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate generator output
+        run: |
+          # The generator must be reproducible: re-running it against the
+          # registry should produce exactly the formula that is committed.
+          # (Only meaningful once the formula has a real, published checksum.)
+          pnpm exec tsx scripts/generate-brew-formula.ts latest
+          if ! git diff --exit-code Formula/podyard.rb; then
+            echo "::error::Formula/podyard.rb is out of date with the registry. Run 'pnpm run generate' and commit the result."
+            exit 1
           fi

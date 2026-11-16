@@ -1,0 +1,4 @@
+{
+  "$schema": "node:ultracite/schema.json",
+  "linter": "biome"
+}

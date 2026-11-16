@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   # Cross-repo trigger: podyard-cli pushes a v* tag
   repository_dispatch:
-    types: [cli-released]
+    types: [ cli-released ]
 
 permissions:
   contents: write
@@ -31,7 +31,7 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Generate formula
         run: pnpm exec tsx scripts/generate-brew-formula.ts latest

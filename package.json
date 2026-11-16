@@ -4,9 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate": "tsx scripts/generate-brew-formula.ts"
+    "check": "biome check .",
+    "check:formula": "brew style Formula/podyard.rb && ! grep -q 'sha256 \"0000000000000000000000000000000000000000000000000000000000000000\"' Formula/podyard.rb",
+    "fix": "biome check --write .",
+    "generate": "tsx scripts/generate-brew-formula.ts",
+    "ultracite:check": "ultracite check",
+    "ultracite:fix": "ultracite fix"
   },
   "devDependencies": {
-    "tsx": "^4.19.0"
+    "@biomejs/biome": "2.6.8",
+    "tsx": "^4.19.0",
+    "ultracite": "8.2.1"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=22"
   }
 }
