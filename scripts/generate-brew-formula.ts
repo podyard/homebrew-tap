@@ -111,12 +111,12 @@ class ${classCamel} < Formula
   depends_on "node"
 
   def install
-    # Dir.pwd is the unpacked \`package/\` directory of the npm tarball, but it is
-    # read-only — copy it to buildpath so npm can install its runtime deps there.
-    # (buildpath is a Dir, so -R copies the directory itself into it.)
-    system "cp", "-R", Dir.pwd, buildpath / "cli"
-    system "npm", "--prefix", buildpath / "cli", "install", "--omit=dev", "--no-audit", "--no-fund"
-    (bin / "${brewName}").write_exec_script buildpath / "cli" / "dist" / "index.js"
+    # Dir.pwd is the unpacked \`package/\` directory of the npm tarball (read-only).
+    # Copy it to libexec so npm can install its runtime deps there.
+    system "cp", "-R", Dir.pwd, libexec
+    system "npm", "--prefix", libexec, "install", "--omit=dev", "--no-audit", "--no-fund"
+    # dist/index.js has its own shebang, so install it directly into bin.
+    (bin / "${brewName}").install libexec / "dist" / "index.js"
   end
 
   test do
