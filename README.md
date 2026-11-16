@@ -73,5 +73,5 @@ podyard --version
 
 ## License
 
-[Apache License 2.0](LICENSE) — the same license as the `@podyard/cli`
+[Apache License 2.0](LICENSE.md) — the same license as the `@podyard/cli`
 package.
