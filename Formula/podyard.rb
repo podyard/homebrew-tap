@@ -3,9 +3,9 @@
 class Podyard < Formula
   desc "Millisecond sandboxes for AI agents (CLI)"
   homepage "https://podyard.dev"
-  url "https://registry.npmjs.org/@podyard/cli/-/cli-0.1.0.tgz"
-  version "0.1.0"
-  sha256 "cda3186b3e39c67366a8cfd3ab448fa43581d8d5817a8fcd0408e5aac0c922fb"
+  url "https://registry.npmjs.org/@podyard/cli/-/cli-0.1.1.tgz"
+  version "0.1.1"
+  sha256 "c41d643563ada136ad384051711ab58f6dd3910a422ba674d0baf55899d0c6fc"
   license "Apache-2.0"
 
   depends_on "node"
