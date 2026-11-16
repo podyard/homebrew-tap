@@ -111,10 +111,10 @@ class ${classCamel} < Formula
   depends_on "node"
 
   def install
-    # stage is the unpacked \`package/\` directory of the npm tarball, but it is
+    # Dir.pwd is the unpacked \`package/\` directory of the npm tarball, but it is
     # read-only — copy it to buildpath so npm can install its runtime deps there.
     # (buildpath is a Dir, so -R copies the directory itself into it.)
-    system "cp", "-R", stage, buildpath / "cli"
+    system "cp", "-R", Dir.pwd, buildpath / "cli"
     system "npm", "--prefix", buildpath / "cli", "install", "--omit=dev", "--no-audit", "--no-fund"
     (bin / "${brewName}").write_exec_script buildpath / "cli" / "dist" / "index.js"
   end
