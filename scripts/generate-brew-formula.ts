@@ -111,10 +111,18 @@ class ${classCamel} < Formula
   depends_on "node"
 
   def install
-    # Install the package from the original tarball URL (not the local dir,
-    # which creates a symlink that breaks when the build temp dir is cleaned).
-    system "npm", "--prefix", libexec, "install", url, "--omit=dev", "--no-audit", "--no-fund"
-    (bin / "${brewName}").install libexec / "node_modules" / "@podyard" / "cli" / "dist" / "index.js"
+    # Dir.pwd is the unpacked \`package/\` directory of the npm tarball (read-only).
+    # Copy it to buildpath so npm can install runtime deps there (buildpath is
+    # writable; the staging dir is not).
+    system "cp", "-R", Dir.pwd, buildpath / "cli"
+    system "npm", "--prefix", buildpath / "cli", "install", "--omit=dev", "--no-audit", "--no-fund"
+    # Move the fully installed package to libexec so it survives build cleanup.
+    system "cp", "-R", buildpath / "cli", libexec
+    # Write a shell wrapper that runs the CLI with node.
+    (bin / "${brewName}").write <<~EOS
+      #!/bin/sh
+      exec node "#{libexec}/dist/index.js" "$@"
+    EOS
   end
 
   test do
