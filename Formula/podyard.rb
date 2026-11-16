@@ -11,10 +11,11 @@ class Podyard < Formula
   depends_on "node"
 
   def install
-    # stage is already the unpacked `package/` directory of the npm tarball.
-    # Install its runtime deps, then link the `podyard` entry point onto PATH.
-    system "npm", "--prefix", stage, "install", "--omit=dev", "--no-audit", "--no-fund"
-    (bin / "podyard").write_env_script stage / "dist" / "index.js"
+    # stage is the unpacked `package/` directory of the npm tarball, but it is
+    # read-only — copy it to buildpath so npm can install its runtime deps there.
+    cp -R stage, buildpath
+    system "npm", "--prefix", buildpath, "install", "--omit=dev", "--no-audit", "--no-fund"
+    (bin / "podyard").write_exec_script buildpath / "dist" / "index.js"
   end
 
   test do
