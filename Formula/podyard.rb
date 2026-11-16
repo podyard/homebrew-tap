@@ -13,9 +13,10 @@ class Podyard < Formula
   def install
     # stage is the unpacked `package/` directory of the npm tarball, but it is
     # read-only — copy it to buildpath so npm can install its runtime deps there.
-    system "cp", "-R", stage, buildpath
-    system "npm", "--prefix", buildpath, "install", "--omit=dev", "--no-audit", "--no-fund"
-    (bin / "podyard").write_exec_script buildpath / "dist" / "index.js"
+    # (buildpath is a Dir, so -R copies the directory itself into it.)
+    system "cp", "-R", stage, buildpath / "cli"
+    system "npm", "--prefix", buildpath / "cli", "install", "--omit=dev", "--no-audit", "--no-fund"
+    (bin / "podyard").write_exec_script buildpath / "cli" / "dist" / "index.js"
   end
 
   test do
